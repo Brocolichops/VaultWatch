@@ -1,0 +1,8 @@
+tick,value,status
+1,1,Normal
+2,1,Normal
+3,1,Normal
+4,0,Fault
+5,0,Fault
+6,0,Fault
+7,1,Normal

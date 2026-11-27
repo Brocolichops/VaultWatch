@@ -1,0 +1,7 @@
+tick,value,status
+1,0,Normal
+2,0,Normal
+3,0,Normal
+4,1,Alarm
+5,1,Alarm
+6,0,Normal
