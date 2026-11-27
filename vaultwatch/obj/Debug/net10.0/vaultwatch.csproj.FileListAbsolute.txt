@@ -1,0 +1,16 @@
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.AssemblyInfoInputs.cache
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.AssemblyInfo.cs
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.csproj.CoreCompileInputs.cache
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.sourcelink.json
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\bin\Debug\net10.0\vaultwatch.exe
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\bin\Debug\net10.0\vaultwatch.deps.json
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\bin\Debug\net10.0\vaultwatch.runtimeconfig.json
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\bin\Debug\net10.0\vaultwatch.dll
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\bin\Debug\net10.0\vaultwatch.pdb
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.dll
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\refint\vaultwatch.dll
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.pdb
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.genruntimeconfig.cache
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\ref\vaultwatch.dll
+C:\Users\anato\source\repos\vaultwatch\vaultwatch\obj\Debug\net10.0\vaultwatch.csproj.Up2Date
