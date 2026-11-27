@@ -1,0 +1,9 @@
+tick,value,status
+1,21.5,Normal
+2,21.6,Normal
+3,21.8,Normal
+4,24.0,Normal
+5,38.2,Alarm
+6,39.0,Alarm
+7,31.0,Warning
+8,23.0,Normal

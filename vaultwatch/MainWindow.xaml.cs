@@ -32,6 +32,10 @@ public partial class MainWindow : Window
             new MotionSensor(messageBus, "rtu-02"),
             new TemperatureSensor(messageBus, "rtu-03")
         };
+        sensors.Add(new ReplayDevice(messageBus, "MOT-BACKHALL-01", "MotionSensor", FileDataSource.FromDataFolder("motion_backhall.csv")));
+        sensors.Add(new ReplayDevice(messageBus, "THM-BACKHALL-01", "ThermalSensor", FileDataSource.FromDataFolder("thermal_backhall.csv")));
+        sensors.Add(new ReplayDevice(messageBus, "GLS-BACKHALL-01", "GlassBreakSensor", FileDataSource.FromDataFolder("glassbreak_backhall.csv")));
+        sensors.Add(new ReplayDevice(messageBus, "CAM-LOBBY-01", "CctvCamera", FileDataSource.FromDataFolder("camera_lobby.csv")));
 
         GenerateSensorMessages();
     }
