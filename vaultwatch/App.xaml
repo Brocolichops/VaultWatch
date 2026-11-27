@@ -1,7 +1,7 @@
 <Application x:Class="VaultWatch.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <SolidColorBrush x:Key="DeepNavyBrush" Color="#071426" />
         <SolidColorBrush x:Key="PanelBrush" Color="#0D223B" />

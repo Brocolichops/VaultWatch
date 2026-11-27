@@ -1,0 +1,113 @@
+<Window x:Class="VaultWatch.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VaultWatch // Secure Login"
+        Width="460"
+        Height="560"
+        MinHeight="560"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource DeepNavyBrush}"
+        FontFamily="Consolas">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Border Margin="24"
+                Padding="28"
+                Background="{StaticResource PanelBrush}"
+                BorderBrush="{StaticResource PanelBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <StackPanel VerticalAlignment="Center">
+            <TextBlock FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource BrightCyanBrush}"
+                       Text="VAULTWATCH" />
+            <TextBlock Margin="0,4,0,24"
+                       FontSize="12"
+                       Foreground="{StaticResource MutedTextBrush}"
+                       Text="// AUTHORIZED CLIENT ACCESS ONLY" />
+
+            <TextBlock Margin="0,0,0,5"
+                       Foreground="{StaticResource MutedTextBrush}"
+                       Text="USERNAME" />
+            <TextBox x:Name="UsernameTextBox"
+                     Height="36"
+                     Padding="8,7"
+                     Background="{StaticResource DeepNavyBrush}"
+                     Foreground="{StaticResource PrimaryTextBrush}"
+                     BorderBrush="{StaticResource PanelBorderBrush}"
+                     FontFamily="Consolas" />
+
+            <TextBlock Margin="0,16,0,5"
+                       Foreground="{StaticResource MutedTextBrush}"
+                       Text="PASSWORD" />
+            <PasswordBox x:Name="PasswordBox"
+                         Height="36"
+                         Padding="8,7"
+                         Background="{StaticResource DeepNavyBrush}"
+                         Foreground="{StaticResource PrimaryTextBrush}"
+                         BorderBrush="{StaticResource PanelBorderBrush}"
+                         FontFamily="Consolas" />
+
+            <TextBlock x:Name="LoginStatusText"
+                       MinHeight="34"
+                       Margin="0,12,0,0"
+                       Foreground="#FFFF7066"
+                       TextWrapping="Wrap" />
+            <Button x:Name="LoginButton"
+                    Height="38"
+                    Margin="0,4,0,0"
+                    Click="Login_Click"
+                    Content="SIGN IN" />
+
+            <Border x:Name="AdminApprovalPanel"
+                    Margin="0,22,0,0"
+                    Padding="14"
+                    Background="#FF3A151B"
+                    BorderBrush="#FFFF4038"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#FFFF7066"
+                               Text="ACCESS LOCKED" />
+                    <TextBlock Margin="0,6,0,14"
+                               Foreground="{StaticResource PrimaryTextBrush}"
+                               TextWrapping="Wrap"
+                               Text="Too many consecutive failed attempts. Administrator approval is required to re-enable sign-in." />
+                    <TextBlock Margin="0,0,0,5"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               Text="ADMINISTRATOR USERNAME" />
+                    <TextBox x:Name="AdminUsernameTextBox"
+                             Height="34"
+                             Padding="8,6"
+                             Background="{StaticResource DeepNavyBrush}"
+                             Foreground="{StaticResource PrimaryTextBrush}"
+                             BorderBrush="{StaticResource PanelBorderBrush}"
+                             FontFamily="Consolas" />
+                    <TextBlock Margin="0,12,0,5"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               Text="ADMINISTRATOR PASSWORD" />
+                    <PasswordBox x:Name="AdminPasswordBox"
+                                 Height="34"
+                                 Padding="8,6"
+                                 Background="{StaticResource DeepNavyBrush}"
+                                 Foreground="{StaticResource PrimaryTextBrush}"
+                                 BorderBrush="{StaticResource PanelBorderBrush}"
+                                 FontFamily="Consolas" />
+                    <TextBlock x:Name="AdminStatusText"
+                               MinHeight="24"
+                               Margin="0,8,0,0"
+                               Foreground="#FFFF7066"
+                               TextWrapping="Wrap" />
+                    <Button Height="36"
+                            Margin="0,4,0,0"
+                            Click="ApproveUnlock_Click"
+                            Content="ADMIN: ALLOW LOGIN" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</ScrollViewer>
+</Window>
