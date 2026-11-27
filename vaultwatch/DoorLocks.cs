@@ -27,8 +27,13 @@ public class DoorLock : INotifyPropertyChanged
         return CommandResult.Accepted;
     }
 
-    public CommandResult Unlock()
+    public CommandResult Unlock(bool confirmed)
     {
+        if (!confirmed)
+        {
+            return CommandResult.Rejected;
+        }
+
         SetLockState(false);
         return CommandResult.Accepted;
     }

@@ -73,7 +73,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            CommandResult result = doorLock.Unlock();
+            CommandResult result = doorLock.Unlock(confirmed: true);
             ReportCommand(new CommandRecord(doorLock.DeviceId, "Unlock", currentUser, result));
         }
     }
