@@ -16,6 +16,4 @@ public class TelemetryMessage : DeviceMessage
     public int Tick { get; }
 
     public double NumericValue { get; }
-
-    public string Status { get; }
 }

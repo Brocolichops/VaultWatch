@@ -87,7 +87,7 @@
                         Width="190"
                         Height="38"
                         Click="SendMessages_Click"
-                        Content="SEND SENSOR MESSAGES" />
+                        Content="STEP SENSOR DATA" />
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock FontSize="11"
                                Foreground="{StaticResource MutedTextBrush}"
@@ -96,7 +96,7 @@
                                FontSize="16"
                                FontWeight="Bold"
                                Foreground="{StaticResource BrightCyanBrush}"
-                               Text="LISTENING FOR DEVICE EVENTS..." />
+                               Text="CLICK STEP TO ADVANCE EACH DEVICE CSV BY ONE ROW" />
                 </StackPanel>
             </DockPanel>
         </Border>
@@ -200,21 +200,51 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="3" Style="{StaticResource PanelBorderStyle}" Padding="1">
-            <DataGrid ItemsSource="{Binding Messages}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      CanUserAddRows="False"
-                      CanUserResizeRows="False"
-                      RowHeaderWidth="0">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="TIME (UTC)" Binding="{Binding Time, StringFormat={}{0:u}}" Width="190" />
-                    <DataGridTextColumn Header="DEVICE ID" Binding="{Binding DeviceId}" Width="130" />
-                    <DataGridTextColumn Header="MODULE" Binding="{Binding ModuleName}" Width="*" />
-                    <DataGridTextColumn Header="MESSAGE TYPE" Binding="{Binding MessageType}" Width="*" />
-                    <DataGridTextColumn Header="VALUE" Binding="{Binding Value}" Width="*" />
-                </DataGrid.Columns>
-            </DataGrid>
+        <Border Grid.Row="3" Style="{StaticResource PanelBorderStyle}" Padding="12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding DeviceLogs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,12"
+                                    Padding="10"
+                                    Style="{StaticResource PanelBorderStyle}">
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold"
+                                               Foreground="{StaticResource BrightCyanBrush}"
+                                               Text="{Binding DeviceId}" />
+                                    <TextBlock Margin="0,2,0,8"
+                                               FontSize="11"
+                                               Foreground="{StaticResource MutedTextBrush}"
+                                               Text="{Binding ModuleName}" />
+                                    <DataGrid Height="130"
+                                              ItemsSource="{Binding Messages}"
+                                              AutoGenerateColumns="False"
+                                              IsReadOnly="True"
+                                              CanUserAddRows="False"
+                                              CanUserResizeRows="False"
+                                              RowHeaderWidth="0">
+                                        <DataGrid.CellStyle>
+                                            <Style TargetType="DataGridCell"
+                                                   BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Warning">
+                                                        <Setter Property="Foreground" Value="#FFFFB454" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.CellStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="TIME (UTC)" Binding="{Binding Time, StringFormat={}{0:u}}" Width="190" />
+                                            <DataGridTextColumn Header="MESSAGE TYPE" Binding="{Binding MessageType}" Width="150" />
+                                            <DataGridTextColumn Header="VALUE" Binding="{Binding Value}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Window>

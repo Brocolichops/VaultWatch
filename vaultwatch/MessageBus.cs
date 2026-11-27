@@ -8,6 +8,7 @@ public class DeviceMessage
     public string ModuleName { get; set; }
     public string MessageType { get; set; }
     public string Value { get; set; }
+    public string Status { get; set; } = string.Empty;
     public DateTime Time { get; set; }
 
     public DeviceMessage(

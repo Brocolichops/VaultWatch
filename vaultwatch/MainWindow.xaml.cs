@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,10 +9,10 @@ namespace VaultWatch;
 public partial class MainWindow : Window
 {
     private readonly MessageBus messageBus = new MessageBus();
-    private readonly List<ISensor> sensors;
+    private readonly List<ReplayDevice> replayDevices;
     private readonly string currentUser;
 
-    public ObservableCollection<DeviceMessage> Messages { get; } = new ObservableCollection<DeviceMessage>();
+    public ObservableCollection<DeviceMessageLog> DeviceLogs { get; } = new ObservableCollection<DeviceMessageLog>();
 
     public ObservableCollection<DoorLock> DoorLocks { get; } = new ObservableCollection<DoorLock>
     {
@@ -29,22 +30,22 @@ public partial class MainWindow : Window
         DataContext = this;
 
         messageBus.Subscribe(AddMessage);
-        sensors = new List<ISensor>
+        replayDevices = new List<ReplayDevice>
         {
-            new MotionSensor(messageBus, "rtu-02"),
-            new TemperatureSensor(messageBus, "rtu-03")
+            new ReplayDevice(messageBus, "MOT-BACKHALL-01", "MotionSensor", FileDataSource.FromDataFolder("motion_backhall.csv")),
+            new ReplayDevice(messageBus, "THM-BACKHALL-01", "ThermalSensor", FileDataSource.FromDataFolder("thermal_backhall.csv")),
+            new ReplayDevice(messageBus, "GLS-BACKHALL-01", "GlassBreakSensor", FileDataSource.FromDataFolder("glassbreak_backhall.csv")),
+            new ReplayDevice(messageBus, "CAM-LOBBY-01", "CctvCamera", FileDataSource.FromDataFolder("camera_lobby.csv")),
+            new ReplayDevice(messageBus, "SOS-TELLER-01", "EmergencySosButton", FileDataSource.FromDataFolder("sos_teller.csv"))
         };
-        sensors.Add(new ReplayDevice(messageBus, "MOT-BACKHALL-01", "MotionSensor", FileDataSource.FromDataFolder("motion_backhall.csv")));
-        sensors.Add(new ReplayDevice(messageBus, "THM-BACKHALL-01", "ThermalSensor", FileDataSource.FromDataFolder("thermal_backhall.csv")));
-        sensors.Add(new ReplayDevice(messageBus, "GLS-BACKHALL-01", "GlassBreakSensor", FileDataSource.FromDataFolder("glassbreak_backhall.csv")));
-        sensors.Add(new ReplayDevice(messageBus, "CAM-LOBBY-01", "CctvCamera", FileDataSource.FromDataFolder("camera_lobby.csv")));
-
-        GenerateSensorMessages();
     }
 
     private void SendMessages_Click(object sender, RoutedEventArgs e)
     {
-        GenerateSensorMessages();
+        foreach (ReplayDevice replayDevice in replayDevices)
+        {
+            replayDevice.Tick();
+        }
     }
 
     private void LockDoor_Click(object sender, RoutedEventArgs e)
@@ -98,17 +99,18 @@ public partial class MainWindow : Window
         LockdownBanner.Visibility = Visibility.Visible;
     }
 
-    private void GenerateSensorMessages()
-    {
-        foreach (ISensor sensor in sensors)
-        {
-            sensor.SendMessage();
-        }
-    }
-
     private void AddMessage(DeviceMessage message)
     {
-        Messages.Add(message);
+        DeviceMessageLog? deviceLog = DeviceLogs.FirstOrDefault(
+            log => string.Equals(log.DeviceId, message.DeviceId, StringComparison.OrdinalIgnoreCase));
+
+        if (deviceLog is null)
+        {
+            deviceLog = new DeviceMessageLog(message.DeviceId, message.ModuleName);
+            DeviceLogs.Add(deviceLog);
+        }
+
+        deviceLog.Messages.Add(message);
     }
 
     private void ReportCommand(CommandRecord command)
