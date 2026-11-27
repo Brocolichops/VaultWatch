@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.FileIO;
 using System.IO;
 using System.Windows;
 
@@ -5,11 +6,8 @@ namespace VaultWatch;
 
 public partial class LoginWindow : Window
 {
-    private const string ClientUsername = "user";
-    private const string ClientPassword = "0000";
-    private const string AdministratorUsername = "admin";
-    private const string AdministratorPassword = "2468";
     private const int MaximumFailedAttempts = 4;
+    private const string CredentialFileName = "credentials.csv";
 
     private static readonly string LockoutFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -43,8 +41,18 @@ public partial class LoginWindow : Window
             return;
         }
 
-        if (string.Equals(UsernameTextBox.Text.Trim(), ClientUsername, StringComparison.OrdinalIgnoreCase)
-            && PasswordBox.Password == ClientPassword)
+        if (!TryAuthenticateFromCsv(
+                UsernameTextBox.Text.Trim(),
+                PasswordBox.Password,
+                "User",
+                out bool authenticated,
+                out string? databaseError))
+        {
+            LoginStatusText.Text = databaseError;
+            return;
+        }
+
+        if (authenticated)
         {
             failedAttempts = 0;
             DialogResult = true;
@@ -89,9 +97,16 @@ public partial class LoginWindow : Window
 
     private void ApproveUnlock_Click(object sender, RoutedEventArgs e)
     {
-        bool administratorAuthenticated =
-            string.Equals(AdminUsernameTextBox.Text.Trim(), AdministratorUsername, StringComparison.OrdinalIgnoreCase)
-            && AdminPasswordBox.Password == AdministratorPassword;
+        if (!TryAuthenticateFromCsv(
+                AdminUsernameTextBox.Text.Trim(),
+                AdminPasswordBox.Password,
+                "Admin",
+                out bool administratorAuthenticated,
+                out string? databaseError))
+        {
+            AdminStatusText.Text = databaseError;
+            return;
+        }
 
         if (!administratorAuthenticated)
         {
@@ -126,6 +141,101 @@ public partial class LoginWindow : Window
         AdminStatusText.Text = string.Empty;
         LoginStatusText.Text = "Access re-enabled by administrator. Sign in to continue.";
         UsernameTextBox.Focus();
+    }
+
+    private static bool TryAuthenticateFromCsv(
+        string username,
+        string password,
+        string requiredRole,
+        out bool authenticated,
+        out string? error)
+    {
+        authenticated = false;
+        error = null;
+        string credentialFilePath = Path.Combine(AppContext.BaseDirectory, CredentialFileName);
+
+        if (!File.Exists(credentialFilePath))
+        {
+            error = $"Credential database not found: {CredentialFileName} beside the application.";
+            return false;
+        }
+
+        try
+        {
+            using TextFieldParser parser = new TextFieldParser(credentialFilePath)
+            {
+                TextFieldType = FieldType.Delimited,
+                HasFieldsEnclosedInQuotes = true
+            };
+            parser.SetDelimiters(",");
+
+            if (parser.EndOfData)
+            {
+                error = "Credential database is empty; expected Username,Password,Role columns.";
+                return false;
+            }
+
+            string[]? headers = parser.ReadFields();
+            if (headers is null
+                || headers.Length != 3
+                || !string.Equals(headers[0].Trim(), "Username", StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(headers[1].Trim(), "Password", StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(headers[2].Trim(), "Role", StringComparison.OrdinalIgnoreCase))
+            {
+                error = "Credential database must start with the columns Username,Password,Role.";
+                return false;
+            }
+
+            HashSet<string> usernames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            while (!parser.EndOfData)
+            {
+                string[]? fields = parser.ReadFields();
+                if (fields is null || (fields.Length == 1 && string.IsNullOrWhiteSpace(fields[0])))
+                {
+                    continue;
+                }
+
+                if (fields.Length != 3
+                    || string.IsNullOrWhiteSpace(fields[0])
+                    || string.IsNullOrEmpty(fields[1])
+                    || string.IsNullOrWhiteSpace(fields[2]))
+                {
+                    error = "Credential database contains an invalid record; each row needs Username,Password,Role.";
+                    return false;
+                }
+
+                string recordUsername = fields[0].Trim();
+                if (!usernames.Add(recordUsername))
+                {
+                    error = $"Credential database contains a duplicate username: {recordUsername}.";
+                    return false;
+                }
+
+                if (string.Equals(recordUsername, username, StringComparison.OrdinalIgnoreCase)
+                    && fields[1] == password
+                    && string.Equals(fields[2].Trim(), requiredRole, StringComparison.OrdinalIgnoreCase))
+                {
+                    authenticated = true;
+                }
+            }
+
+            return true;
+        }
+        catch (MalformedLineException ex)
+        {
+            error = $"Credential database contains malformed CSV at line {ex.LineNumber}.";
+            return false;
+        }
+        catch (IOException ex)
+        {
+            error = $"Could not read the credential database: {ex.Message}";
+            return false;
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            error = $"Could not read the credential database: {ex.Message}";
+            return false;
+        }
     }
 
     private void SetLockedOutState()

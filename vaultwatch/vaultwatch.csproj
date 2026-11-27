@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <Page Include="App.xaml" />
+    <None Update="credentials.csv"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

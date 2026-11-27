@@ -21,10 +21,14 @@
                        FontWeight="Bold"
                        Foreground="{StaticResource BrightCyanBrush}"
                        Text="VAULTWATCH" />
-            <TextBlock Margin="0,4,0,24"
+            <TextBlock Margin="0,4,0,8"
                        FontSize="12"
                        Foreground="{StaticResource MutedTextBrush}"
                        Text="// AUTHORIZED CLIENT ACCESS ONLY" />
+            <TextBlock Margin="0,0,0,18"
+                       FontSize="11"
+                       Foreground="{StaticResource MutedTextBrush}"
+                       Text="Demo credentials are read from credentials.csv beside the application." />
 
             <TextBlock Margin="0,0,0,5"
                        Foreground="{StaticResource MutedTextBrush}"
