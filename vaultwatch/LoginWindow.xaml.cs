@@ -17,6 +17,8 @@ public partial class LoginWindow : Window
     private int failedAttempts;
     private bool isLockedOut;
 
+    public string LoggedInUsername { get; private set; } = string.Empty;
+
     public LoginWindow()
     {
         InitializeComponent();
@@ -55,6 +57,7 @@ public partial class LoginWindow : Window
         if (authenticated)
         {
             failedAttempts = 0;
+            LoggedInUsername = UsernameTextBox.Text.Trim();
             DialogResult = true;
             return;
         }

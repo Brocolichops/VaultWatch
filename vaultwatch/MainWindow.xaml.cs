@@ -9,6 +9,7 @@ public partial class MainWindow : Window
 {
     private readonly MessageBus messageBus = new MessageBus();
     private readonly List<ISensor> sensors;
+    private readonly string currentUser;
 
     public ObservableCollection<DeviceMessage> Messages { get; } = new ObservableCollection<DeviceMessage>();
 
@@ -21,9 +22,10 @@ public partial class MainWindow : Window
         new DoorLock("door-loading", "LOADING ENTRANCE")
     };
 
-    public MainWindow()
+    public MainWindow(string currentUser)
     {
         InitializeComponent();
+        this.currentUser = currentUser;
         DataContext = this;
 
         messageBus.Subscribe(AddMessage);
@@ -49,7 +51,8 @@ public partial class MainWindow : Window
     {
         if (sender is Button button && button.Tag is DoorLock doorLock)
         {
-            doorLock.Lock();
+            CommandResult result = doorLock.Lock();
+            ReportCommand(new CommandRecord(doorLock.DeviceId, "Lock", currentUser, result));
         }
     }
 
@@ -57,7 +60,20 @@ public partial class MainWindow : Window
     {
         if (sender is Button button && button.Tag is DoorLock doorLock)
         {
-            doorLock.Unlock();
+            MessageBoxResult answer = MessageBox.Show(
+               this,
+               $"Unlock {doorLock.Name}?",
+               "Confirm unlock",
+               MessageBoxButton.YesNo,
+               MessageBoxImage.Warning);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            CommandResult result = doorLock.Unlock();
+            ReportCommand(new CommandRecord(doorLock.DeviceId, "Unlock", currentUser, result));
         }
     }
 
@@ -93,5 +109,15 @@ public partial class MainWindow : Window
     private void AddMessage(DeviceMessage message)
     {
         Messages.Add(message);
+    }
+
+    private void ReportCommand(CommandRecord command)
+    {
+        // Show the command result in the message grid (FUN-015)
+        messageBus.Publish(new DeviceMessage(
+            command.DeviceId,
+            "DoorLock",
+            $"Command: {command.Action}",
+            $"{command.Result} (by {command.IssuedBy})"));
     }
 }
