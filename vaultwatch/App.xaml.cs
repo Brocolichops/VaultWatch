@@ -15,7 +15,7 @@ public partial class App : Application
             return;
         }
 
-        MainWindow mainWindow = new MainWindow();
+        MainWindow mainWindow = new MainWindow(loginWindow.LoggedInUsername);
         MainWindow = mainWindow;
         ShutdownMode = ShutdownMode.OnMainWindowClose;
         mainWindow.Show();

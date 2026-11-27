@@ -21,14 +21,16 @@ public class DoorLock : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public void Lock()
+    public CommandResult Lock()
     {
         SetLockState(true);
+        return CommandResult.Accepted;
     }
 
-    public void Unlock()
+    public CommandResult Unlock()
     {
         SetLockState(false);
+        return CommandResult.Accepted;
     }
 
     public void ActivateLockdown()
